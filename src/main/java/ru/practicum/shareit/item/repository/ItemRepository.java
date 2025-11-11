@@ -8,7 +8,7 @@ public interface ItemRepository {
 
     Item addItem(Long ownerId, Item item);
 
-    Item updateItem(Long ownerId, Long itemId, Item item);
+    Item updateItem(Long itemId, Item item);
 
     List<Item> getItemsByOwner(Long ownerId);
 

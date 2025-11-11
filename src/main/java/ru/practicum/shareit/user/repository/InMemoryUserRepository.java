@@ -23,17 +23,6 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User updateUser(Long id, User user) {
-        System.out.println(user);
-        if (user.getName() == null) {
-            user.setName(users.get(id).getName());
-        }
-        if (user.getEmail() == null) {
-            user.setEmail(users.get(id).getEmail());
-        }
-        if (!users.containsKey(id)) {
-            String message = "Пользователь не найден";
-            throw new NotFoundException(message);
-        }
         user.setId(id);
         users.put(id, user);
         return user;

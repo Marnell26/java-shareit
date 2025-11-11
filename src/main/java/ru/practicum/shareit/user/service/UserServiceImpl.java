@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ConflictException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -30,6 +31,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Long id, UserDto userDto) {
+        User updatedUser = userRepository.getUserById(id);
+        if (userDto.getName() == null) {
+            userDto.setName(updatedUser.getName());
+        }
+        if (userDto.getEmail() == null) {
+            userDto.setEmail(updatedUser.getEmail());
+        }
         validateUniqueEmail(userDto.getEmail());
         User user = userRepository.updateUser(id, userMapper.toUser(userDto));
         return userMapper.toUserDto(user);
