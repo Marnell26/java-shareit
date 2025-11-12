@@ -1,12 +1,10 @@
 package ru.practicum.shareit.item.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
@@ -24,14 +22,14 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestHeader(X_SHARER_USER_ID) @Positive Long ownerId,
-                           @RequestBody @Valid ItemDto itemDto) {
+            @RequestBody @Valid ItemDto itemDto) {
         return itemService.addItem(ownerId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader(X_SHARER_USER_ID) @Positive Long ownerId,
-                              @PathVariable @Positive Long itemId,
-                              @RequestBody ItemDto itemDto) {
+            @PathVariable @Positive Long itemId,
+            @RequestBody ItemDto itemDto) {
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
 

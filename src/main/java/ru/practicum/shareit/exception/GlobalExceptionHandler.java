@@ -18,24 +18,24 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(error -> new ValidationError(error.getField(), error.getDefaultMessage()))
                 .toList();
-        return new ErrorResponse("Ошибка валидации", exception.getStatusCode().toString(), errors);
+        return new ErrorResponse("Ошибка валидации", errors);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ErrorResponse handleNotFoundExceptions(NotFoundException exception) {
-        return new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.toString());
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleOtherExceptions(Exception exception) {
-        return new ErrorResponse("Внутренняя ошибка сервера", HttpStatus.INTERNAL_SERVER_ERROR.toString());
+        return new ErrorResponse("Внутренняя ошибка сервера");
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(ConflictException.class)
     public ErrorResponse handleConflictExceptions(ConflictException exception) {
-        return new ErrorResponse(exception.getMessage(), HttpStatus.CONFLICT.toString());
+        return new ErrorResponse(exception.getMessage());
     }
 }
