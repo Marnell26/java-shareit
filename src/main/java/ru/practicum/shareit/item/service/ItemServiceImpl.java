@@ -38,18 +38,8 @@ public class ItemServiceImpl implements ItemService {
         if (!Objects.equals(ownerId, updatedItem.getOwner().getId())) {
             throw new NotFoundException("Редактировать вещь может только её владелец");
         }
-        if (itemDto.getName() == null) {
-            itemDto.setName(updatedItem.getName());
-        }
-        if (itemDto.getDescription() == null) {
-            itemDto.setDescription(updatedItem.getDescription());
-        }
-        if (itemDto.getAvailable() == null) {
-            itemDto.setAvailable(updatedItem.getAvailable());
-        }
-        itemDto.setOwner(updatedItem.getOwner());
-        itemDto.setRequest(updatedItem.getRequest());
-        Item item = itemRepository.updateItem(itemId, itemMapper.toItem(itemDto));
+        itemMapper.updateItem(itemDto, updatedItem);
+        Item item = itemRepository.updateItem(itemId, updatedItem);
         return itemMapper.toItemDto(item);
     }
 

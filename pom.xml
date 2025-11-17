@@ -65,6 +65,11 @@
 			<artifactId>logbook-spring-boot-starter</artifactId>
 			<version>3.7.2</version>
 		</dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.6.3</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -124,7 +129,7 @@
 							<version>9.3</version>
 						</dependency>
 					</dependencies>
-				</plugin>
+                </plugin>
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>

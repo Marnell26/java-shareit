@@ -31,14 +31,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(Long id, UserDto userDto) {
         User updatedUser = userRepository.getUserById(id);
-        if (userDto.getName() == null) {
-            userDto.setName(updatedUser.getName());
+        if (userDto.getEmail() != null) {
+            validateUniqueEmail(userDto.getEmail());
         }
-        validateUniqueEmail(userDto.getEmail());
-        if (userDto.getEmail() == null) {
-            userDto.setEmail(updatedUser.getEmail());
-        }
-        User user = userRepository.updateUser(id, userMapper.toUser(userDto));
+        userMapper.updateUser(userDto, updatedUser);
+        User user = userRepository.updateUser(id, updatedUser);
         return userMapper.toUserDto(user);
     }
 
@@ -61,12 +58,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateUniqueEmail(String email) {
-        userRepository.getUsers().stream()
-                .map(User::getEmail)
-                .filter(s -> s.equals(email))
-                .findFirst()
-                .ifPresent(s -> {
-                    throw new ConflictException("Email уже используется");
-                });
+        if (userRepository.validateUniqueEmail(email.toLowerCase())) {
+            throw new ConflictException("Email уже используется");
+        }
     }
+
 }
