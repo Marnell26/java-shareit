@@ -15,4 +15,6 @@ public interface UserRepository {
     List<User> getUsers();
 
     void deleteUser(Long id);
+
+    boolean validateUniqueEmail(String email);
 }
