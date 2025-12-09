@@ -52,5 +52,4 @@ public class BookingController {
         return bookingService.getOwnerBookings(ownerId, state);
     }
 
-
 }

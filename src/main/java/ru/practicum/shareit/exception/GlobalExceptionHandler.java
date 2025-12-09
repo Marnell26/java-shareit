@@ -38,4 +38,11 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleConflictExceptions(ConflictException exception) {
         return new ErrorResponse(exception.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenException.class)
+    public ErrorResponse handleForbiddenException(ForbiddenException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
 }
