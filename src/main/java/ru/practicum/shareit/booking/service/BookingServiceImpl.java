@@ -41,7 +41,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDto createBooking(Long userId, BookingCreateDto bookingCreateDto) {
-        User booker = userRepository.getUserById(userId);
+        User booker = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Item item = itemRepository.findById(bookingCreateDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
         availableCheck(item);
@@ -71,7 +72,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public List<BookingDto> getUserBookings(Long userId, BookingState state) {
-        return bookingRepository.findAllByUserId(userId).stream()
+        return bookingRepository.findAllByBookerId(userId).stream()
                 .map(bookingMapper::toBookingDto)
                 .toList();
     }

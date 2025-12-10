@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -23,8 +24,8 @@ public class BookingController {
 
     @PostMapping
     public BookingDto createBooking(@RequestHeader(X_SHARER_USER_ID) @Positive Long userId,
-            @RequestBody @Valid BookingDto bookingDto) {
-        return bookingService.createBooking(userId, bookingDto);
+            @RequestBody @Valid BookingCreateDto bookingCreateDto) {
+        return bookingService.createBooking(userId, bookingCreateDto);
     }
 
     @PatchMapping("/{bookingId}")
@@ -34,7 +35,7 @@ public class BookingController {
         return bookingService.updateBooking(userId, bookingId, approved);
     }
 
-    @GetMapping
+    @GetMapping("/{bookingId}")
     public BookingDto getBookingById(@RequestHeader(X_SHARER_USER_ID) Long userId,
             @PathVariable Long bookingId) {
         return bookingService.getBookingById(userId, bookingId);

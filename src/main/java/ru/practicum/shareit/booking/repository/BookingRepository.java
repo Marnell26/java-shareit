@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    List<Booking> findAllByUserId(long userId);
+    List<Booking> findAllByBookerId(long bookerId);
 
     List<Booking> findAllByItem_OwnerId(long userId);
 }
