@@ -20,6 +20,12 @@ public interface BookingMapper {
     })
     Booking toBooking(BookingCreateDto bookingCreateDto, Item item, User booker);
 
+    @Mappings({
+            @Mapping(target = "item.id", source = "item.id"),
+            @Mapping(target = "item.name", source = "item.name"),
+            @Mapping(target = "booker.id", source = "booker.id"),
+            @Mapping(target = "booker.name", source = "booker.name")
+    })
     BookingDto toBookingDto(Booking booking);
 
 }

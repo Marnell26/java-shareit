@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponse handleValidationExceptions(MethodArgumentNotValidException exception) {
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleOtherExceptions(Exception exception) {
-        return new ErrorResponse("Внутренняя ошибка сервера");
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)

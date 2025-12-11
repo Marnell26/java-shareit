@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -41,10 +42,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto addItem(Long ownerId, ItemDto itemDto) {
-        itemDto.setOwner(userRepository.findById(ownerId)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден")));
-        Item item = itemRepository.save(itemMapper.toItem(itemDto));
+    public ItemDto addItem(Long ownerId, ItemCreateDto itemCreateDto) {
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        Item item = itemRepository.save(itemMapper.toItem(itemCreateDto, owner));
         return itemMapper.toItemDto(item);
     }
 

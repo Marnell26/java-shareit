@@ -18,6 +18,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,7 +46,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Item item = itemRepository.findById(bookingCreateDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
-        availableCheck(item);
+        availableCheck(item, bookingCreateDto.getStart(), bookingCreateDto.getEnd());
         Booking booking = bookingRepository.save(bookingMapper.toBooking(bookingCreateDto, item, booker));
         return bookingMapper.toBookingDto(booking);
     }
@@ -72,7 +73,21 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public List<BookingDto> getUserBookings(Long userId, BookingState state) {
-        return bookingRepository.findAllByBookerId(userId).stream()
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        List<Booking> bookingList = switch (state) {
+            case CURRENT -> bookingRepository.findByItemOwnerIdAndStartDateBeforeAndEndDateAfterOrderByStartDate(userId,
+                    currentTime, currentTime);
+            case PAST -> bookingRepository.findByItemOwnerIdAndEndDateBeforeOrderByEndDate(userId, currentTime);
+            case FUTURE -> bookingRepository.findByItemOwnerIdAndStartDateAfterOrderByStartDate(userId, currentTime);
+            case WAITING -> bookingRepository.findByItemOwnerIdAndStatusOrderByStartDate(userId, BookingState.WAITING);
+            case REJECTED ->
+                    bookingRepository.findByItemOwnerIdAndStatusOrderByStartDate(userId, BookingState.REJECTED);
+            default -> bookingRepository.findByBookerIdOrderByStartDate(userId);
+        };
+        return bookingList.stream()
                 .map(bookingMapper::toBookingDto)
                 .toList();
     }
@@ -85,9 +100,13 @@ public class BookingServiceImpl implements BookingService {
                 .toList();
     }
 
-    private void availableCheck(Item item) {
+    private void availableCheck(Item item, LocalDateTime start, LocalDateTime end) {
         if (!item.getAvailable()) {
             throw new ValidationException("Вещь не доступна для бронирования");
+        }
+        if (bookingRepository.existsByItemIdAndStatusAndStartLessThanAndEndGreaterThan(item.getId(),
+                BookingStatus.APPROVED, start, end)) {
+            throw new ValidationException();
         }
     }
 

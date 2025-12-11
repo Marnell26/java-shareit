@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -23,20 +24,20 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader(X_SHARER_USER_ID) @Positive Long ownerId,
-            @RequestBody @Valid ItemDto itemDto) {
-        return itemService.addItem(ownerId, itemDto);
+    public ItemDto addItem(@RequestHeader(X_SHARER_USER_ID) Long ownerId,
+            @RequestBody @Valid ItemCreateDto itemCreateDto) {
+        return itemService.addItem(ownerId, itemCreateDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@RequestHeader(X_SHARER_USER_ID) @Positive Long ownerId,
-            @PathVariable @Positive Long itemId,
+    public ItemDto updateItem(@RequestHeader(X_SHARER_USER_ID) Long ownerId,
+            @PathVariable Long itemId,
             @RequestBody ItemDto itemDto) {
         return itemService.updateItem(ownerId, itemId, itemDto);
     }
 
     @GetMapping
-    public List<ItemDto> getItemsByOwner(@RequestHeader(X_SHARER_USER_ID) @Positive Long ownerId) {
+    public List<ItemDto> getItemsByOwner(@RequestHeader(X_SHARER_USER_ID) Long ownerId) {
         return itemService.getItemsByOwner(ownerId);
     }
 
@@ -51,7 +52,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(@RequestHeader(X_SHARER_USER_ID) @Positive Long userId,
+    public CommentDto addComment(@RequestHeader(X_SHARER_USER_ID) Long userId,
             @PathVariable @Positive Long itemId,
             @RequestBody @Valid CommentCreateDto commentCreateDto) {
         return itemService.addComment(userId, itemId, commentCreateDto);
