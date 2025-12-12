@@ -29,7 +29,7 @@ status VARCHAR(20) NOT NULL DEFAULT 'WAITING',
 CONSTRAINT pk_bookings PRIMARY KEY (id),
 CONSTRAINT fk_bookings_item_id FOREIGN KEY (item_id) REFERENCES items(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
 CONSTRAINT fk_bookings_booker_id FOREIGN KEY (booker_id) REFERENCES users(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
-CONSTRAINT chk_bookings_period  CHECK (start_at < end_at),
+CONSTRAINT chk_bookings_period  CHECK (start_date < end_date),
 CONSTRAINT chk_bookings_status  CHECK (status IN ('WAITING','APPROVED','REJECTED','CANCELED'))
 );
 
