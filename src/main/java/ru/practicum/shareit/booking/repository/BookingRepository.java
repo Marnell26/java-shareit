@@ -7,21 +7,38 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    List<Booking> findAllByItem_OwnerId(long userId);
+    List<Booking> findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(Long bookerId, LocalDateTime start,
+            LocalDateTime end);
 
-    List<Booking> findByItemOwnerIdAndStartDateBeforeAndEndDateAfterOrderByStartDate(Long bookerId, LocalDateTime start
-            , LocalDateTime end);
+    List<Booking> findByBookerIdAndEndBeforeOrderByStartDesc(Long bookerId, LocalDateTime end);
 
-    List<Booking> findByItemOwnerIdAndEndDateBeforeOrderByEndDate(Long bookerId, LocalDateTime end);
+    List<Booking> findByBookerIdAndStartAfterOrderByStartDesc(Long bookerId, LocalDateTime start);
 
-    List<Booking> findByItemOwnerIdAndStartDateAfterOrderByStartDate(Long bookerId, LocalDateTime end);
+    List<Booking> findByBookerIdAndStatusOrderByStartDesc(Long bookerId, BookingState status);
 
-    List<Booking> findByItemOwnerIdAndStatusOrderByStartDate(Long bookerId, BookingState status);
+    List<Booking> findByBookerIdOrderByStartDesc(Long bookerId);
 
-    List<Booking> findByBookerIdOrderByStartDate(Long bookerId);
+    List<Booking> findByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(Long userId, LocalDateTime start,
+            LocalDateTime end);
+
+    List<Booking> findByItemOwnerIdAndEndBeforeOrderByStartDesc(Long userId, LocalDateTime end);
+
+    List<Booking> findByItemOwnerIdAndStartAfterOrderByStartDesc(Long userId, LocalDateTime start);
+
+    List<Booking> findByItemOwnerIdAndStatusOrderByStartDesc(Long userId, BookingState status);
+
+    List<Booking> findByItemOwnerIdOrderByStartDesc(Long userId);
+
+    Optional<Booking> findTopByItemIdAndEndBeforeOrderByEndDesc(Long itemId, LocalDateTime end);
+
+    Optional<Booking> findTopByItemIdAndStartAfterOrderByStartDesc(Long itemId, LocalDateTime start);
+
+    Optional<Booking> findFirstByItemIdAndBookerIdAndStatusAndEndBefore(Long itemId, Long userId, BookingStatus status,
+            LocalDateTime date);
 
     boolean existsByItemIdAndStatusAndStartLessThanAndEndGreaterThan(
             Long itemId, BookingStatus status, LocalDateTime start, LocalDateTime end);

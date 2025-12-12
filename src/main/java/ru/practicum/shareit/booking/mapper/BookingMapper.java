@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -20,12 +21,12 @@ public interface BookingMapper {
     })
     Booking toBooking(BookingCreateDto bookingCreateDto, Item item, User booker);
 
-    @Mappings({
-            @Mapping(target = "item.id", source = "item.id"),
-            @Mapping(target = "item.name", source = "item.name"),
-            @Mapping(target = "booker.id", source = "booker.id"),
-            @Mapping(target = "booker.name", source = "booker.name")
-    })
     BookingDto toBookingDto(Booking booking);
+
+    @Mappings({
+            @Mapping(target = "start", source = "booking.start"),
+            @Mapping(target = "end", source = "booking.end")
+    })
+    BookingItemDto toBookingItemDto(Booking booking);
 
 }

@@ -1,7 +1,10 @@
 package ru.practicum.shareit.booking.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -26,12 +29,10 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false, foreignKey = @ForeignKey(name = "fk_bookings_item_id"))
-    @ToString.Exclude
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booker_id", nullable = false, foreignKey = @ForeignKey(name = "fk_bookings_booker_id"))
-    @ToString.Exclude
     private User booker;
 
     @Enumerated(EnumType.STRING)

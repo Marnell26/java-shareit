@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.service;
 
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +12,7 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -73,21 +73,22 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public List<BookingDto> getUserBookings(Long userId, BookingState state) {
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
 
-        List<Booking> bookingList = switch (state) {
-            case CURRENT -> bookingRepository.findByItemOwnerIdAndStartDateBeforeAndEndDateAfterOrderByStartDate(userId,
-                    currentTime, currentTime);
-            case PAST -> bookingRepository.findByItemOwnerIdAndEndDateBeforeOrderByEndDate(userId, currentTime);
-            case FUTURE -> bookingRepository.findByItemOwnerIdAndStartDateAfterOrderByStartDate(userId, currentTime);
-            case WAITING -> bookingRepository.findByItemOwnerIdAndStatusOrderByStartDate(userId, BookingState.WAITING);
-            case REJECTED ->
-                    bookingRepository.findByItemOwnerIdAndStatusOrderByStartDate(userId, BookingState.REJECTED);
-            default -> bookingRepository.findByBookerIdOrderByStartDate(userId);
+        List<Booking> bookings = switch (state) {
+            case CURRENT -> bookingRepository.findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
+                    now, now);
+            case PAST -> bookingRepository.findByBookerIdAndEndBeforeOrderByStartDesc(userId, now);
+            case FUTURE -> bookingRepository.findByBookerIdAndStartAfterOrderByStartDesc(userId,
+                    now);
+            case WAITING -> bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId,
+                    BookingState.WAITING);
+            case REJECTED -> bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingState.REJECTED);
+            default -> bookingRepository.findByBookerIdOrderByStartDesc(userId);
         };
-        return bookingList.stream()
+        return bookings.stream()
                 .map(bookingMapper::toBookingDto)
                 .toList();
     }
@@ -95,7 +96,23 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public List<BookingDto> getOwnerBookings(Long ownerId, BookingState state) {
-        return bookingRepository.findAllByItem_OwnerId(ownerId).stream()
+        userRepository.findById(ownerId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        LocalDateTime now = LocalDateTime.now();
+
+        List<Booking> bookings = switch (state) {
+            case CURRENT -> bookingRepository.findByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(ownerId,
+                    now, now);
+            case PAST -> bookingRepository.findByItemOwnerIdAndEndBeforeOrderByStartDesc(ownerId, now);
+            case FUTURE -> bookingRepository.findByItemOwnerIdAndStartAfterOrderByStartDesc(ownerId,
+                    now);
+            case WAITING -> bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(ownerId,
+                    BookingState.WAITING);
+            case REJECTED ->
+                    bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingState.REJECTED);
+            default -> bookingRepository.findByItemOwnerIdOrderByStartDesc(ownerId);
+        };
+        return bookings.stream()
                 .map(bookingMapper::toBookingDto)
                 .toList();
     }
@@ -106,7 +123,7 @@ public class BookingServiceImpl implements BookingService {
         }
         if (bookingRepository.existsByItemIdAndStatusAndStartLessThanAndEndGreaterThan(item.getId(),
                 BookingStatus.APPROVED, start, end)) {
-            throw new ValidationException();
+            throw new ValidationException("На эти даты уже есть подтвержденная бронь");
         }
     }
 

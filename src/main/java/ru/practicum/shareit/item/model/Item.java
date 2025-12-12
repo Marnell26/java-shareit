@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -11,6 +12,7 @@ import ru.practicum.shareit.user.model.User;
 @NoArgsConstructor
 @Entity
 @Table(name = "items")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
