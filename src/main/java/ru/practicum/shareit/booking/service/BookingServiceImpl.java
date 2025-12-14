@@ -10,6 +10,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.booking.strategy.BookingStrategy;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
@@ -29,14 +30,17 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final List<BookingStrategy> bookingStrategies;
 
     @Autowired
     public BookingServiceImpl(BookingRepository bookingRepository, BookingMapper bookingMapper,
-            UserRepository userRepository, ItemRepository itemRepository) {
+                              UserRepository userRepository, ItemRepository itemRepository,
+                              List<BookingStrategy> bookingStrategies) {
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
+        this.bookingStrategies = bookingStrategies;
     }
 
     @Override
@@ -75,19 +79,12 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getUserBookings(Long userId, BookingState state) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        LocalDateTime now = LocalDateTime.now();
+        BookingStrategy strategy = bookingStrategies.stream()
+                .filter(bookingStrategy -> bookingStrategy.getState() == state)
+                .findFirst()
+                .orElseThrow();
+        List<Booking> bookings = strategy.getBookings(userId, false);
 
-        List<Booking> bookings = switch (state) {
-            case CURRENT -> bookingRepository.findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
-                    now, now);
-            case PAST -> bookingRepository.findByBookerIdAndEndBeforeOrderByStartDesc(userId, now);
-            case FUTURE -> bookingRepository.findByBookerIdAndStartAfterOrderByStartDesc(userId,
-                    now);
-            case WAITING -> bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId,
-                    BookingState.WAITING);
-            case REJECTED -> bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingState.REJECTED);
-            default -> bookingRepository.findByBookerIdOrderByStartDesc(userId);
-        };
         return bookings.stream()
                 .map(bookingMapper::toBookingDto)
                 .toList();
@@ -98,24 +95,21 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getOwnerBookings(Long ownerId, BookingState state) {
         userRepository.findById(ownerId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        LocalDateTime now = LocalDateTime.now();
+        BookingStrategy strategy = bookingStrategies.stream()
+                .filter(bookingStrategy -> bookingStrategy.getState() == state)
+                .findFirst()
+                .orElseThrow();
+        List<Booking> bookings = strategy.getBookings(ownerId, true);
 
-        List<Booking> bookings = switch (state) {
-            case CURRENT -> bookingRepository.findByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(ownerId,
-                    now, now);
-            case PAST -> bookingRepository.findByItemOwnerIdAndEndBeforeOrderByStartDesc(ownerId, now);
-            case FUTURE -> bookingRepository.findByItemOwnerIdAndStartAfterOrderByStartDesc(ownerId,
-                    now);
-            case WAITING -> bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(ownerId,
-                    BookingState.WAITING);
-            case REJECTED ->
-                    bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(ownerId, BookingState.REJECTED);
-            default -> bookingRepository.findByItemOwnerIdOrderByStartDesc(ownerId);
-        };
         return bookings.stream()
                 .map(bookingMapper::toBookingDto)
                 .toList();
     }
+
+    private BookingStrategy selectStrategy() {
+        return null;
+    }
+
 
     private void availableCheck(Item item, LocalDateTime start, LocalDateTime end) {
         if (!item.getAvailable()) {

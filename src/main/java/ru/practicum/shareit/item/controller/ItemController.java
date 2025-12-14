@@ -9,11 +9,12 @@ import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
+import static ru.practicum.shareit.constant.Constants.X_SHARER_USER_ID;
+
 @RestController
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
-    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
 
     @Autowired
     public ItemController(ItemService itemService) {

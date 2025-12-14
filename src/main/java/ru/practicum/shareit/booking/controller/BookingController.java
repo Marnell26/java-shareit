@@ -10,11 +10,12 @@ import ru.practicum.shareit.booking.service.BookingService;
 
 import java.util.List;
 
+import static ru.practicum.shareit.constant.Constants.X_SHARER_USER_ID;
+
 @RestController
 @RequestMapping(path = "/bookings")
 public class BookingController {
     private final BookingService bookingService;
-    private static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
 
     @Autowired
     public BookingController(BookingService bookingService) {
