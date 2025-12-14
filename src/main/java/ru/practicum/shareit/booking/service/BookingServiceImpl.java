@@ -106,11 +106,6 @@ public class BookingServiceImpl implements BookingService {
                 .toList();
     }
 
-    private BookingStrategy selectStrategy() {
-        return null;
-    }
-
-
     private void availableCheck(Item item, LocalDateTime start, LocalDateTime end) {
         if (!item.getAvailable()) {
             throw new ValidationException("Вещь не доступна для бронирования");
