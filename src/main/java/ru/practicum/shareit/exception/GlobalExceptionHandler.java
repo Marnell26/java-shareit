@@ -10,15 +10,22 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResponse handleValidationExceptions(MethodArgumentNotValidException exception) {
+    public ErrorResponse handleJakartaValidationExceptions(MethodArgumentNotValidException exception) {
         List<ValidationError> errors = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> new ValidationError(error.getField(), error.getDefaultMessage()))
                 .toList();
         return new ErrorResponse("Ошибка валидации", errors);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    public ErrorResponse handleValidationExceptions(ValidationException exception) {
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -30,7 +37,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleOtherExceptions(Exception exception) {
-        return new ErrorResponse("Внутренняя ошибка сервера");
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -38,4 +45,11 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleConflictExceptions(ConflictException exception) {
         return new ErrorResponse(exception.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenException.class)
+    public ErrorResponse handleForbiddenException(ForbiddenException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
 }
