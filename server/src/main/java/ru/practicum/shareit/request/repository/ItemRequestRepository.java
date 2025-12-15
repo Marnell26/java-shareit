@@ -6,6 +6,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import java.util.List;
 
 public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> {
+
     List<ItemRequest> findAllByRequestorIdOrderByCreatedDesc(Long userId);
 
     List<ItemRequest> findAllByRequestorIdNotIn(Long userId);
