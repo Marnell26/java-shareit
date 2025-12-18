@@ -2,23 +2,25 @@ package ru.practicum.shareit.item.mapper;
 
 import org.mapstruct.*;
 import ru.practicum.shareit.booking.dto.BookingItemDto;
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemCreateDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemFullDto;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ItemMapper {
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({
+            @Mapping(target = "id", ignore = true),
             @Mapping(target = "name", source = "itemCreateDto.name"),
+            @Mapping(target = "description", source = "itemCreateDto.description"),
             @Mapping(target = "owner", source = "owner"),
-            @Mapping(target = "request", ignore = true)
+            @Mapping(target = "request", source = "itemRequest")
     })
-    Item toItem(ItemCreateDto itemCreateDto, User owner);
+    Item toItem(ItemCreateDto itemCreateDto, User owner, ItemRequest itemRequest);
 
     ItemDto toItemDto(Item item);
 
@@ -34,4 +36,7 @@ public interface ItemMapper {
             @Mapping(target = "comments", source = "comments")
     })
     ItemFullDto toItemFullDto(Item item, BookingItemDto last, BookingItemDto next, List<CommentDto> comments);
+
+    @Mapping(target = "ownerId", source = "item.owner.id")
+    ItemShortDto toItemShortDto(Item item);
 }

@@ -1,7 +1,5 @@
 package ru.practicum.shareit.item.controller;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.*;
@@ -23,7 +21,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestHeader(X_SHARER_USER_ID) Long ownerId,
-            @RequestBody @Valid ItemCreateDto itemCreateDto) {
+            @RequestBody ItemCreateDto itemCreateDto) {
         return itemService.addItem(ownerId, itemCreateDto);
     }
 
@@ -51,8 +49,8 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@RequestHeader(X_SHARER_USER_ID) Long userId,
-            @PathVariable @Positive Long itemId,
-            @RequestBody @Valid CommentCreateDto commentCreateDto) {
+            @PathVariable Long itemId,
+            @RequestBody CommentCreateDto commentCreateDto) {
         return itemService.addComment(userId, itemId, commentCreateDto);
     }
 }

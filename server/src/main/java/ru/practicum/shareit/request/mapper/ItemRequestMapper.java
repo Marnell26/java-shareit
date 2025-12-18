@@ -3,12 +3,15 @@ package ru.practicum.shareit.request.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.request.dto.ItemCreateRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDtoWithItemsList;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ItemRequestMapper {
@@ -21,5 +24,11 @@ public interface ItemRequestMapper {
     ItemRequest toItemRequest(ItemCreateRequestDto createDto, User user, LocalDateTime now);
 
     ItemRequestDto toItemRequestDto(ItemRequest itemRequest);
+
+    @Mappings({
+            @Mapping(target = "id", source = "itemRequest.id"),
+            @Mapping(target = "items", source = "items")
+    })
+    ItemRequestDtoWithItemsList toItemRequestDtoWithItemsList(ItemRequest itemRequest, List<ItemShortDto> items);
 
 }

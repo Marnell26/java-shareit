@@ -1,10 +1,10 @@
 package ru.practicum.shareit.request.controller;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemCreateRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDtoWithItemsList;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
 import java.util.List;
@@ -23,22 +23,22 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDto addRequest(@RequestHeader(X_SHARER_USER_ID) Long userId,
-                                     @RequestBody @Valid ItemCreateRequestDto itemCreateRequestDto) {
+            @RequestBody ItemCreateRequestDto itemCreateRequestDto) {
         return itemRequestService.addRequest(userId, itemCreateRequestDto);
     }
 
     @GetMapping
-    public List<ItemRequestDto> getOwnRequests(@RequestHeader(X_SHARER_USER_ID) Long userId) {
+    public List<ItemRequestDtoWithItemsList> getOwnRequests(@RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemRequestService.getOwnRequests(userId);
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getAllRequests(@RequestHeader(X_SHARER_USER_ID) Long userId) {
+    public List<ItemRequestDtoWithItemsList> getAllRequests(@RequestHeader(X_SHARER_USER_ID) Long userId) {
         return itemRequestService.getAllRequests(userId);
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestDto getRequestById(@PathVariable Long requestId) {
+    public ItemRequestDtoWithItemsList getRequestById(@PathVariable Long requestId) {
         return itemRequestService.getRequestById(requestId);
     }
 
