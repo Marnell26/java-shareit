@@ -25,7 +25,7 @@ is_available BOOLEAN NOT NULL,
 owner_id BIGINT NOT NULL,
 request_id BIGINT,
 CONSTRAINT pk_items PRIMARY KEY (id),
-CONSTRAINT fk_items_owner FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE RESTRICT
+CONSTRAINT fk_items_owner FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE RESTRICT,
 CONSTRAINT fk_items_requests FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE SET NULL
 );
 
