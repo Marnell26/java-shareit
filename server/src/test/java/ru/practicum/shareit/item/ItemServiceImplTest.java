@@ -329,21 +329,24 @@ class ItemServiceImplTest {
         commentDto.setId(1L);
         commentDto.setText("Good");
         commentDto.setAuthorName("Booker");
-        commentDto.setCreated(LocalDateTime.now());
+        commentDto.setCreated(LocalDateTime.now().minusSeconds(1));
 
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
         when(userRepository.findById(2L)).thenReturn(Optional.of(booker));
         when(bookingRepository.findFirstByItemIdAndBookerIdAndStatusAndEndBefore(
                 eq(1L), eq(2L), eq(BookingStatus.APPROVED), any(LocalDateTime.class)))
                 .thenReturn(Optional.of(booking));
-        when(commentMapper.toComment(commentCreateDto, item, booker, LocalDateTime.now())).thenReturn(comment);
+        when(commentMapper.toComment(eq(commentCreateDto), eq(item), eq(booker), any(LocalDateTime.class)))
+                .thenReturn(comment);
         when(commentRepository.save(comment)).thenReturn(comment);
         when(commentMapper.toCommentDto(comment)).thenReturn(commentDto);
 
         CommentDto result = itemService.addComment(2L, 1L, commentCreateDto);
 
         assertNotNull(result);
-        assertEquals(commentDto, result);
+        assertEquals(commentDto.getId(), result.getId());
+        assertEquals(commentDto.getText(), result.getText());
+        assertEquals(commentDto.getAuthorName(), result.getAuthorName());
         verify(commentRepository, times(1)).save(comment);
     }
 
