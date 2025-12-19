@@ -1,8 +1,10 @@
 package ru.practicum.shareit.item.mapper;
 
+import org.mapstruct.AnnotateWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import ru.practicum.shareit.constant.GeneratedMapper;
 import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.model.Comment;
@@ -11,6 +13,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
+@AnnotateWith(GeneratedMapper.class)
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
