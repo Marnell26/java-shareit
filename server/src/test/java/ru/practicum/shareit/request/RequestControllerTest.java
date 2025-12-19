@@ -67,13 +67,13 @@ class RequestControllerTest {
 
     @Test
     void getOwnRequestsTest() throws Exception {
-        ItemRequestDtoWithItemsList ItemRequestDtoWithItemsList = new ItemRequestDtoWithItemsList();
-        ItemRequestDtoWithItemsList.setId(1L);
-        ItemRequestDtoWithItemsList.setDescription("Need an item");
-        ItemRequestDtoWithItemsList.setCreated(LocalDateTime.now());
+        ItemRequestDtoWithItemsList itemRequestDtoWithItemsList = new ItemRequestDtoWithItemsList();
+        itemRequestDtoWithItemsList.setId(1L);
+        itemRequestDtoWithItemsList.setDescription("Need an item");
+        itemRequestDtoWithItemsList.setCreated(LocalDateTime.now());
 
         Mockito.when(requestService.getOwnRequests(1L))
-                .thenReturn(List.of(ItemRequestDtoWithItemsList));
+                .thenReturn(List.of(itemRequestDtoWithItemsList));
 
         mvc.perform(get("/requests")
                         .header("X-Sharer-User-Id", 1L))
@@ -84,13 +84,13 @@ class RequestControllerTest {
 
     @Test
     void getAllRequestsTest() throws Exception {
-        ItemRequestDtoWithItemsList ItemRequestDtoWithItemsList = new ItemRequestDtoWithItemsList();
-        ItemRequestDtoWithItemsList.setId(2L);
-        ItemRequestDtoWithItemsList.setDescription("Need an item");
-        ItemRequestDtoWithItemsList.setCreated(LocalDateTime.now());
+        ItemRequestDtoWithItemsList itemRequestDtoWithItemsList = new ItemRequestDtoWithItemsList();
+        itemRequestDtoWithItemsList.setId(2L);
+        itemRequestDtoWithItemsList.setDescription("Need an item");
+        itemRequestDtoWithItemsList.setCreated(LocalDateTime.now());
 
         Mockito.when(requestService.getAllRequests(2L))
-                .thenReturn(List.of(ItemRequestDtoWithItemsList));
+                .thenReturn(List.of(itemRequestDtoWithItemsList));
 
         mvc.perform(get("/requests/all")
                         .header("X-Sharer-User-Id", 2L)
@@ -103,12 +103,12 @@ class RequestControllerTest {
 
     @Test
     void getByIdTest() throws Exception {
-        ItemRequestDtoWithItemsList ItemRequestDtoWithItemsList = new ItemRequestDtoWithItemsList();
-        ItemRequestDtoWithItemsList.setId(5L);
-        ItemRequestDtoWithItemsList.setDescription("Need an item");
-        ItemRequestDtoWithItemsList.setCreated(LocalDateTime.now());
+        ItemRequestDtoWithItemsList itemRequestDtoWithItemsList = new ItemRequestDtoWithItemsList();
+        itemRequestDtoWithItemsList.setId(5L);
+        itemRequestDtoWithItemsList.setDescription("Need an item");
+        itemRequestDtoWithItemsList.setCreated(LocalDateTime.now());
 
-        Mockito.when(requestService.getRequestById(5L)).thenReturn(ItemRequestDtoWithItemsList);
+        Mockito.when(requestService.getRequestById(5L)).thenReturn(itemRequestDtoWithItemsList);
 
         mvc.perform(get("/requests/{requestId}", 5L)
                         .header("X-Sharer-User-Id", 3L))
