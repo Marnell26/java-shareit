@@ -71,13 +71,11 @@
         <dependency>
             <groupId>org.zalando</groupId>
             <artifactId>logbook-spring-boot-starter</artifactId>
-            <version>3.7.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.6.3</version>
         </dependency>
     </dependencies>
 
@@ -116,7 +114,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.11.0</version>
                     <configuration>
                         <source>21</source>
                         <target>21</target>
@@ -129,7 +126,6 @@
                             <path>
                                 <groupId>org.mapstruct</groupId>
                                 <artifactId>mapstruct-processor</artifactId>
-                                <version>1.6.3</version>
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
@@ -137,7 +133,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.1.2</version>
                     <configuration>
                         <configLocation>checkstyle.xml</configLocation>
                         <failOnViolation>true</failOnViolation>
@@ -156,14 +151,12 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>9.3</version>
                         </dependency>
                     </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.8.5.0</version>
                     <configuration>
                         <effort>Max</effort>
                         <threshold>High</threshold>
@@ -179,7 +172,6 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.12</version>
                     <configuration>
                         <output>file</output>
                     </configuration>
@@ -259,7 +251,6 @@
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>4.8.5.0</version>
                     </plugin>
                 </plugins>
             </build>
@@ -279,7 +270,6 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.12</version>
                     </plugin>
                 </plugins>
             </build>

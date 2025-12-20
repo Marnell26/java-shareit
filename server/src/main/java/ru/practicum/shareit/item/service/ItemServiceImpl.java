@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingItemDto;
@@ -8,8 +8,8 @@ import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -28,6 +28,7 @@ import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
@@ -37,20 +38,6 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
     private final ItemRequestRepository itemRequestRepository;
-
-    @Autowired
-    public ItemServiceImpl(ItemRepository itemRepository, ItemMapper itemMapper, UserRepository userRepository,
-            CommentRepository commentRepository, CommentMapper commentMapper, BookingRepository bookingRepository,
-            BookingMapper bookingMapper, ItemRequestRepository itemRequestRepository) {
-        this.itemRepository = itemRepository;
-        this.itemMapper = itemMapper;
-        this.userRepository = userRepository;
-        this.commentRepository = commentRepository;
-        this.commentMapper = commentMapper;
-        this.bookingRepository = bookingRepository;
-        this.bookingMapper = bookingMapper;
-        this.itemRequestRepository = itemRequestRepository;
-    }
 
     @Override
     @Transactional
@@ -138,7 +125,7 @@ public class ItemServiceImpl implements ItemService {
             Comment comment = commentRepository.save(commentMapper.toComment(commentCreateDto, item, user, now));
             return commentMapper.toCommentDto(comment);
         } else {
-            throw new ValidationException("Оставить отзыв может только пользователь, который брал вещь в аренду");
+            throw new NotAvailableException("Оставить отзыв может только пользователь, который брал вещь в аренду");
         }
 
     }

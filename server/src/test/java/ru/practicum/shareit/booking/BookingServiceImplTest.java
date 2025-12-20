@@ -16,8 +16,8 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.booking.strategy.BookingStrategy;
 import ru.practicum.shareit.exception.ForbiddenException;
+import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -145,7 +145,7 @@ class BookingServiceImplTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(booker));
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
 
-        assertThrows(ValidationException.class, () -> bookingService.createBooking(1L, bookingCreateDto));
+        assertThrows(NotAvailableException.class, () -> bookingService.createBooking(1L, bookingCreateDto));
         verify(bookingRepository, never()).save(any());
     }
 
@@ -157,7 +157,7 @@ class BookingServiceImplTest {
                 eq(1L), eq(BookingStatus.APPROVED), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(true);
 
-        assertThrows(ValidationException.class, () -> bookingService.createBooking(1L, bookingCreateDto));
+        assertThrows(NotAvailableException.class, () -> bookingService.createBooking(1L, bookingCreateDto));
         verify(bookingRepository, never()).save(any());
     }
 

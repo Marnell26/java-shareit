@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -11,14 +11,10 @@ import static ru.practicum.shareit.constant.Constants.X_SHARER_USER_ID;
 
 @RestController
 @RequestMapping("/requests")
+@RequiredArgsConstructor
 @Validated
 public class RequestController {
     private final RequestClient requestClient;
-
-    @Autowired
-    public RequestController(RequestClient requestClient) {
-        this.requestClient = requestClient;
-    }
 
     @PostMapping
     public ResponseEntity<Object> addRequest(@RequestHeader(X_SHARER_USER_ID) Long userId,

@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -9,14 +9,10 @@ import ru.practicum.shareit.user.dto.CreateUserDto;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 @Validated
 public class UserController {
     private final UserClient userClient;
-
-    @Autowired
-    public UserController(UserClient userClient) {
-        this.userClient = userClient;
-    }
 
     @PostMapping
     public ResponseEntity<Object> addUser(@RequestBody @Valid CreateUserDto createUserDto) {

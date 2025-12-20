@@ -1,6 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
@@ -12,8 +12,8 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.strategy.BookingStrategy;
 import ru.practicum.shareit.exception.ForbiddenException;
+import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -25,23 +25,13 @@ import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final List<BookingStrategy> bookingStrategies;
-
-    @Autowired
-    public BookingServiceImpl(BookingRepository bookingRepository, BookingMapper bookingMapper,
-                              UserRepository userRepository, ItemRepository itemRepository,
-                              List<BookingStrategy> bookingStrategies) {
-        this.bookingRepository = bookingRepository;
-        this.bookingMapper = bookingMapper;
-        this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
-        this.bookingStrategies = bookingStrategies;
-    }
 
     @Override
     @Transactional
@@ -108,11 +98,11 @@ public class BookingServiceImpl implements BookingService {
 
     private void availableCheck(Item item, LocalDateTime start, LocalDateTime end) {
         if (!item.getAvailable()) {
-            throw new ValidationException("Вещь не доступна для бронирования");
+            throw new NotAvailableException("Вещь не доступна для бронирования");
         }
         if (bookingRepository.existsByItemIdAndStatusAndStartLessThanAndEndGreaterThan(item.getId(),
                 BookingStatus.APPROVED, start, end)) {
-            throw new ValidationException("На эти даты уже есть подтвержденная бронь");
+            throw new NotAvailableException("На эти даты уже есть подтвержденная бронь");
         }
     }
 

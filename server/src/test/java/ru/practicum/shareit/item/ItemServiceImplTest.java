@@ -11,8 +11,8 @@ import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -358,7 +358,7 @@ class ItemServiceImplTest {
                 anyLong(), anyLong(), eq(BookingStatus.APPROVED), any(LocalDateTime.class)))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ValidationException.class,
+        assertThrows(NotAvailableException.class,
                 () -> itemService.addComment(2L, 1L, commentCreateDto));
         verify(commentRepository, never()).save(any());
     }

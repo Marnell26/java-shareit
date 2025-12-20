@@ -11,15 +11,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.ShareItApp;
+import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -193,7 +194,7 @@ class ItemControllerTest {
         req.setText("bad");
 
         Mockito.when(itemService.addComment(eq(2L), eq(3L), any(CommentCreateDto.class)))
-                .thenThrow(new ValidationException("User has no approved bookings"));
+                .thenThrow(new NotAvailableException("User has no approved bookings"));
 
         mvc.perform(post("/items/{itemId}/comment", 3L)
                         .header(HDR, 2L)

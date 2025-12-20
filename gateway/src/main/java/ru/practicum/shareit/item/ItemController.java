@@ -2,7 +2,7 @@ package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +14,10 @@ import static ru.practicum.shareit.constant.Constants.X_SHARER_USER_ID;
 
 @RestController
 @RequestMapping("/items")
+@RequiredArgsConstructor
 @Validated
 public class ItemController {
     private final ItemClient itemClient;
-
-    @Autowired
-    public ItemController(ItemClient itemClient) {
-        this.itemClient = itemClient;
-    }
 
     @PostMapping
     public ResponseEntity<Object> addItem(@RequestHeader(X_SHARER_USER_ID) Long ownerId,

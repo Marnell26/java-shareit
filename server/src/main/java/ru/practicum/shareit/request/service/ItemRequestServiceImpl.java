@@ -1,12 +1,11 @@
 package ru.practicum.shareit.request.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemCreateRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -22,22 +21,13 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final ItemRequestMapper itemRequestMapper;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
-
-    @Autowired
-    public ItemRequestServiceImpl(ItemRequestRepository itemRequestRepository, ItemRequestMapper itemRequestMapper,
-            UserRepository userRepository, ItemRepository itemRepository, ItemMapper itemMapper) {
-        this.itemRequestRepository = itemRequestRepository;
-        this.itemRequestMapper = itemRequestMapper;
-        this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
-        this.itemMapper = itemMapper;
-    }
 
     @Override
     @Transactional
@@ -83,12 +73,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     private List<ItemShortDto> getRequestItems(ItemRequest request) {
-        List<Item> itemss = itemRepository.findAllByRequestId(request.getId());
-        System.out.println("Результат запроса: " + itemss);
-        List<ItemShortDto> items = itemRepository.findAllByRequestId(request.getId()).stream()
+        return itemRepository.findAllByRequestId(request.getId()).stream()
                 .map(itemMapper::toItemShortDto)
                 .toList();
-        System.out.println(items);
-        return items;
     }
+
 }

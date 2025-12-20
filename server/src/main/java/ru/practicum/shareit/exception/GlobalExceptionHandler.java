@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ValidationException.class)
-    public ErrorResponse handleValidationExceptions(ValidationException exception) {
+    @ExceptionHandler(NotAvailableException.class)
+    public ErrorResponse handleValidationExceptions(NotAvailableException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 
