@@ -29,6 +29,7 @@
         <spring-boot-web.version>3.3.2</spring-boot-web.version>
         <spring-boot-actuator.version>3.3.2</spring-boot-actuator.version>
         <spring-boot-configuration-processor.version>3.3.2</spring-boot-configuration-processor.version>
+        <puppycrawl.version>9.3</puppycrawl.version>
     </properties>
 
     <modules>
@@ -106,6 +107,11 @@
                 <groupId>org.zalando</groupId>
                 <artifactId>logbook-spring-boot-starter</artifactId>
                 <version>${logbook.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.puppycrawl.tools</groupId>
+                <artifactId>checkstyle</artifactId>
+                <version>${puppycrawl.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
